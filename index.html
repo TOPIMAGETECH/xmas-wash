@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merry Christmas Wishes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="snowfall"></div>
+    <div class="container">
+        <header>
+            <h1 class="glow">🎄 Merry Christmas! 🎅</h1>
+            <p>Spread the joy this festive season</p>
+        </header>
+
+        <main>
+            <div class="card">
+                <p class="message">Dear <span id="user-name">Friend</span>, 🎁 wishing you a Merry Christmas and a Happy New Year! 🎉</p>
+                <input type="text" id="name-input" placeholder="Enter your name">
+                <button id="generate-btn">Create Wish</button>
+                <button id="share-btn">Share Wish</button>
+                <button id="download-btn">Download Card</button>
+            </div>
+            <p id="countdown"></p>
+        </main>
+
+        <footer>
+            <p>Designed with ❤ by Bismarck</p>
+        </footer>
+    </div>
+    <audio id="background-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+    <button id="music-toggle" class="music-btn">Play Music</button>
+
+    <script src="index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const nameInput = document.getElementById('name-input');
+        const generateBtn = document.getElementById('generate-btn');
+        const userNameSpan = document.getElementById('user-name');
+        const musicToggle = document.getElementById('music-toggle');
+        const backgroundMusic = document.getElementById('background-music');
+        const downloadBtn = document.getElementById('download-btn');
+        const shareBtn = document.getElementById('share-btn');
+
+        generateBtn.addEventListener('click', function() {
+            const name = nameInput.value.trim();
+            if (name) {
+                userNameSpan.textContent = name;
+            } else {
+                userNameSpan.textContent = 'Friend';
+            }
+        });
+
+        shareBtn.addEventListener('click', function() {
+            const shareData = {
+                title: 'Merry Christmas Wishes',
+                text: `Dear ${userNameSpan.textContent}, 🎁 wishing you a Merry Christmas and a Happy New Year! 🎉`,
+                url: window.location.href
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData).then(() => {
+                    console.log('Thanks for sharing!');
+                }).catch(console.error);
+            } else {
+                    alert('Web Share API is not supported in your browser.');
+                }
+            });
+    
+            downloadBtn.addEventListener('click', function() {
+                html2canvas(document.querySelector('.card')).then(function(canvas) {
+                    const link = document.createElement('a');
+                    link.download = 'christmas-card.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            });
+
+            musicToggle.addEventListener('click', function() {
+            });
+            musicToggle.addEventListener('click', function() {
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                    musicToggle.textContent = 'Pause Music';
+                } else {
+                    backgroundMusic.pause();
+                    musicToggle.textContent = 'Play Music';
+                }
+            });
+
+            function updateCountdown() {
+                const now = new Date();
+                const nextChristmas = new Date(now.getFullYear(), 11, 25);
+                if (now.getMonth() === 11 && now.getDate() > 25) {
+                    nextChristmas.setFullYear(nextChristmas.getFullYear() + 1);
+                }
+                const diff = nextChristmas - now;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                countdownElement.textContent = `Countdown to Christmas: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+        });
+
+
+    </script>
+</body>
+</html>
+
